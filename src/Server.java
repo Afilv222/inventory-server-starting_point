@@ -1,47 +1,58 @@
-import java.net.ServerSocket; 
-import java.io.IOException; 
-import java.net.Socket; 
+import java.net.ServerSocket;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
-public class Server{
+public class Server {
 
     BufferedReader socketIn;
-    PrintWriter socketOut; 
+    PrintWriter socketOut;
 
-    Server(){
+    Server() {
         try {
             ServerSocket serverSocket = new ServerSocket(9000);
-            Socket socket = serverSocket.accept(); 
+            System.out.println("Server is now running!!");
+            Socket socket = serverSocket.accept();
 
-            // read and write socket data 
-            InputStreamReader streamReader = new InputStreamReader(socket.getInputStream()); 
-            this.socketIn = new BufferedReader(streamReader); 
-    
-            this.socketOut = new PrintWriter(socket.getOutputStream(),true); 
+            // read and write socket data
+            InputStreamReader socketInputReader = new InputStreamReader(socket.getInputStream());
+            socketIn = new BufferedReader(socketInputReader);
+
+            socketOut = new PrintWriter(socket.getOutputStream(), true);
 
             String line = "";
-            while(true){
-                this.line = socketIn.readLine(); 
-                if(line.equalsIgnoreCase("DATE")){
-                    // Do something 
-                    socketOut.write(""); 
-                } 
-                if(line.equalsIgnoreCase("BREAK")){
-                    break; 
+            while (true) {
+                try {
+                    line = socketIn.readLine();
+                    Database dp = new Database();
+                    if (line.equalsIgnoreCase("SEARCH")) {
+                        // Do something
+                        Item item = dp.search(socket.getPort());
+                        // socketOut.write(socket.getPort());
+                        socketOut.write(item.toString());
+                    }
+                    if (line.equalsIgnoreCase("EXIT")) {
+                        break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // TODO: handle exception
                 }
             }
 
-                socketIn.close();
-                socketOut.close(); 
-                socket.close(); 
+            socketIn.close();
+            socketOut.close();
+            socket.close();
         } catch (Exception e) {
+            e.printStackTrace();
             // TODO: handle exception
         }
     }
 
     public static void main(String[] args) {
-        
+
     }
-
-
 
 }
