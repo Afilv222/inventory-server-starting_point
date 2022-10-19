@@ -1,23 +1,24 @@
+import java.io.Serializable;
 
 // needs to be implement Serializable 
-public class Supplier{
+public class Supplier implements Serializable {
 
 	private int id;
 	private String name;
-	
-	Supplier(int id, String name){
+
+	Supplier(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
+
 	public String getName() {
 		return name;
 	}
-	
-	
+
 	@Override
 	public String toString() {
 

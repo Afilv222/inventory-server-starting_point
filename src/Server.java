@@ -2,7 +2,9 @@ import java.net.ServerSocket;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.net.Socket;
 
 public class Server {
@@ -29,9 +31,16 @@ public class Server {
                     Database dp = new Database();
                     if (line.equalsIgnoreCase("SEARCH")) {
                         // Do something
-                        Item item = dp.search(socket.getPort());
+                        socketOut.println("Enter ID of Item to be searched");
+                        line = socketIn.readLine();
+
+                        Item item = dp.search(Integer.parseInt(line));
+                        ObjectOutputStream objectOutPutStream = new ObjectOutputStream(socket.getOutputStream());
+                        objectOutPutStream.writeObject(item);
+                        System.out.println(item.toString());
+
                         // socketOut.write(socket.getPort());
-                        socketOut.write(item.toString());
+                        // socketOut.write(item.toString());
                     }
                     if (line.equalsIgnoreCase("EXIT")) {
                         break;
@@ -52,6 +61,7 @@ public class Server {
     }
 
     public static void main(String[] args) {
+        Server server = new Server();
 
     }
 

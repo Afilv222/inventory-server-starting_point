@@ -1,7 +1,7 @@
 import java.io.Serializable;
 
 // needs to be implement Serializable 
-public class Item {
+public class Item implements Serializable {
 	private int id;
 	private String name;
 	private Supplier supplier;

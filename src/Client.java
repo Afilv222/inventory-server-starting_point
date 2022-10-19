@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -39,17 +40,20 @@ public class Client {
 
     public void communicate() {
         String line = "";
-        String response = "";
+        Item response = null;
+
+        System.out.println("Please select an option(SEARCH/EXIT)");
 
         while (true) {
             try {
-                System.out.println("Please select an option(SEARCH/EXIT)");
                 line = stdIn.readLine();
-
                 if (!line.equalsIgnoreCase("EXIT")) {
+
                     socketOut.println(line);
-                    response = socketIn.readLine();
-                    System.out.println(response);
+                    ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+                    // response = socketIn.readLine();
+                    response = (Item) objectInputStream.readObject();
+                    System.out.println(response.getId());
                 } else {
                     System.out.println("Closing this connection");
                     socket.close();
@@ -71,5 +75,9 @@ public class Client {
         } catch (Exception e) {
             System.out.print("Closing error:" + e.getMessage());
         }
+    }
+
+    public static void main(String[] args) {
+        Client client = new Client("127.0.0.1", 9000);
     }
 }
