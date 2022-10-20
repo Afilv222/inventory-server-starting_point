@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.net.Socket;
 
-public class Server {
+public class Server implements Serializable {
 
     BufferedReader socketIn;
     PrintWriter socketOut;
@@ -28,23 +28,20 @@ public class Server {
             while (true) {
                 try {
                     line = socketIn.readLine();
-                    Database dp = new Database();
-                    if (line.equalsIgnoreCase("SEARCH")) {
-                        // Do something
-                        socketOut.println("Enter ID of Item to be searched");
-                        line = socketIn.readLine();
-
+                    
+                    if (line.equalsIgnoreCase("EXIT")) {
+                        break;
+                    }else{
+                        Database dp = new Database();
+                        
+    
                         Item item = dp.search(Integer.parseInt(line));
                         ObjectOutputStream objectOutPutStream = new ObjectOutputStream(socket.getOutputStream());
                         objectOutPutStream.writeObject(item);
                         System.out.println(item.toString());
+    
+                    }
 
-                        // socketOut.write(socket.getPort());
-                        // socketOut.write(item.toString());
-                    }
-                    if (line.equalsIgnoreCase("EXIT")) {
-                        break;
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     // TODO: handle exception

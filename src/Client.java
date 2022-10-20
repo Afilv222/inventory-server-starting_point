@@ -42,20 +42,23 @@ public class Client {
         String line = "";
         Item response = null;
 
-        System.out.println("Please select an option(SEARCH/EXIT)");
 
         while (true) {
+            System.out.println("Please select an option(SEARCH/EXIT)");
             try {
                 line = stdIn.readLine();
                 if (!line.equalsIgnoreCase("EXIT")) {
-
+                    System.out.println("Enter ID of Item to be searched");
+                    line = stdIn.readLine();
+                    
                     socketOut.println(line);
                     ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
                     // response = socketIn.readLine();
                     response = (Item) objectInputStream.readObject();
-                    System.out.println(response.getId());
+                    System.out.println(response.toString());
                 } else {
                     System.out.println("Closing this connection");
+                    socketOut.println("EXIT");
                     socket.close();
                     System.out.println("Connection closed");
                     break;
